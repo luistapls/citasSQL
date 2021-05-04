@@ -4,6 +4,12 @@ class MySQL {
   constructor(tableName) {
     this.tableName = tableName;
   }
+  async multipleCreate(arrayNewData) {
+    await pool.query(
+      `INSERT INTO consultas (consulta_inicio, consulta_final, hospital_id, doctor_id) VALUES ?`,
+      [arrayNewData],
+    );
+  }
 
   async create(newData) {
     await pool.query(`INSERT INTO ${this.tableName} SET ?`, [newData]);

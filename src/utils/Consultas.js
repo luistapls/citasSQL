@@ -49,6 +49,8 @@ class Consultas {
             'La duracion de cada consulta es mayor a la jornada de trabajo.',
         });
       } else {
+        const arrayNewConsultas = [];
+
         // Inicializando contadores.
         let consulta_inicio = momentStart.format('YYYY-MM-DD hh:mm:ss');
         let consulta_final = consulta_inicio;
@@ -60,18 +62,20 @@ class Consultas {
             .format('YYYY-MM-DD hh:mm:ss');
 
           // Este objeto representa la consulta. Listo para enviar y ser guardada en la base de datos.
-          const newConsulta = {
+          const newConsulta = [
             consulta_inicio,
             consulta_final,
             hospital_id,
             doctor_id,
-          };
+          ];
 
-          await mysqlConsultas.create(newConsulta);
+          arrayNewConsultas.push(newConsulta);
 
           // La fecha final de la consulta es la fecha inicial de la siguiente consulta.
           consulta_inicio = consulta_final;
         }
+
+        await mysqlConsultas.multipleCreate(arrayNewConsultas);
       }
     }
 
