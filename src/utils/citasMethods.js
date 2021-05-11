@@ -9,7 +9,11 @@ const {
 const createCita = async (req, res) => {
   const { patientId, appointmentId } = req.body;
 
-  const existentCita = await Cita.findAll();
+  const existentCita = await Cita.findAll({
+    where: {
+      appointmentId,
+    },
+  });
 
   if (existentCita.length) {
     return res.status(400).json({
@@ -75,4 +79,15 @@ const deleteCita = async (req, res) => {
   return res.status(200).json({});
 };
 
-module.exports = { createCita, readCitas, deleteCita };
+const readYourCita = async (req, res) => {
+  const { patient } = req;
+
+  const allPatientCitas = await Cita.findAll({
+    where: {
+      patientId: patient.id,
+    },
+  });
+
+  return res.status(200).json(allPatientCitas);
+};
+module.exports = { createCita, readCitas, deleteCita, readYourCita };
