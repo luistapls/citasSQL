@@ -7,19 +7,24 @@ const {
 } = require('../database/db');
 
 const createCita = async (req, res) => {
-  const { patientId, appointmentId } = req.body;
+  const { token } = req;
+  const { appointmentId } = req.body;
 
-  const existentCita = await Cita.findAll({
+  const existentCita = await Cita.findOne({
     where: {
       appointmentId,
     },
   });
 
-  if (existentCita.length) {
-    return res.status(400).json({
-      error: 'La cita que desea elegir ya ha sido ocupada por otro paciente.',
+  if (!existentCita) {
+    const findPatient = await Patient.findOne({
+      where: {
+        token,
+      },
     });
-  } else {
+
+    const patientId = findPatient.id;
+
     const newCita = {
       patientId,
       appointmentId,
@@ -28,42 +33,96 @@ const createCita = async (req, res) => {
     const createdCita = await Cita.create(newCita);
 
     return res.status(201).json(createdCita);
+  } else {
+    return res.status(400).json({
+      error: 'La cita que desea elegir ya ha sido ocupada por otro paciente.',
+    });
   }
 };
 
 const readCitas = async (req, res) => {
-  const { citaId } = req.query;
+  const { typeRead, token } = req;
 
-  if (citaId) {
-    const cita = await Cita.findOne({
-      where: {
-        id: citaId,
-      },
-      include: [
-        {
-          model: Appointment,
-          include: [Doctor, Ubication],
+  switch (typeRead) {
+    case 'Patient': {
+      const findPatient = await Patient.findOne({
+        where: {
+          token,
         },
-        {
-          model: Patient,
-        },
-      ],
-    });
-    return res.status(200).json(cita);
-  } else {
-    const allCitas = await Cita.findAll({
-      include: [
-        {
-          model: Appointment,
-          include: [Doctor, Ubication],
-        },
-        {
-          model: Patient,
-        },
-      ],
-    });
+      });
 
-    return res.status(200).json(allCitas);
+      const patientId = findPatient.id;
+
+      const findCitas = await Cita.findAll({
+        where: {
+          patientId,
+        },
+        include: [
+          {
+            model: Appointment,
+            include: [Doctor, Ubication],
+          },
+          {
+            model: Patient,
+          },
+        ],
+      });
+
+      return res.status(200).json(findCitas);
+    }
+
+    case 'Doctor': {
+      const findDoctor = await Doctor.findOne({
+        where: {
+          token,
+        },
+      });
+
+      const doctorId = findDoctor.id;
+
+      const findCitas = await Cita.findAll({
+        where: {
+          doctorId,
+        },
+        include: [
+          {
+            model: Appointment,
+            include: [Doctor, Ubication],
+          },
+          {
+            model: Patient,
+          },
+        ],
+      });
+
+      return res.status(200).json(findCitas);
+    }
+    case 'Ubication': {
+      const findUbication = await Ubication.findOne({
+        where: {
+          token,
+        },
+      });
+
+      const ubicationId = findUbication.id;
+
+      const findCitas = await Cita.findAll({
+        where: {
+          ubicationId,
+        },
+        include: [
+          {
+            model: Appointment,
+            include: [Doctor, Ubication],
+          },
+          {
+            model: Patient,
+          },
+        ],
+      });
+
+      return res.status(200).json(findCitas);
+    }
   }
 };
 
@@ -79,15 +138,4 @@ const deleteCita = async (req, res) => {
   return res.status(200).json({});
 };
 
-const readYourCita = async (req, res) => {
-  const { patient } = req;
-
-  const allPatientCitas = await Cita.findAll({
-    where: {
-      patientId: patient.id,
-    },
-  });
-
-  return res.status(200).json(allPatientCitas);
-};
-module.exports = { createCita, readCitas, deleteCita, readYourCita };
+module.exports = { createCita, readCitas, deleteCita };

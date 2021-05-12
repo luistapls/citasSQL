@@ -1,19 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const tokenCita = require('../middleware/tokenCita');
 
+const middlewareCita = require('../middleware/middlewareCita');
 const citasMethods = require('../utils/citasMethods');
 
-router.post('/create', (req, res) => citasMethods.createCita(req, res));
+router.post('/create', middlewareCita.createCita, citasMethods.createCita);
 
-router.get('/read', (req, res) => citasMethods.readCitas(req, res));
+router.get('/read', middlewareCita.readCita, citasMethods.readCitas);
 
-router.delete('/delete/:citaId', (req, res) =>
-  citasMethods.deleteCita(req, res),
-);
-
-router.get('/readYourCita', tokenCita, (req, res) =>
-  citasMethods.readYourCita(req, res),
-);
+router.delete('/delete/:citaId', citasMethods.deleteCita);
 
 module.exports = router;

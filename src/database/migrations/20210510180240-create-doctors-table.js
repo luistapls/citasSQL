@@ -21,6 +21,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.TEXT,
       },
+      token: {
+        allowNull: false,
+        type: Sequelize.STRING,
+      },
     });
   },
 
