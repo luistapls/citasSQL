@@ -9,8 +9,8 @@ app.set('port', process.env.PORT || 3000);
 
 app.use(express.json());
 
-app.use('/api/appointments', require('./routes/appointmentsRoutes'));
-app.use('/api/citas', require('./routes/citasRoutes'));
+// app.use('/api/appointments', require('./routes/appointmentsRoutes'));
+app.use('/api/journeys', require('./routes/journeysRoutes'));
 
 app.listen(app.get('port'), async () => {
   console.log('Server on port: ', app.get('port'));

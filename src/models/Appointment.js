@@ -7,22 +7,13 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models, caseAssociation) {
-      switch (caseAssociation) {
-        case 'belongsTo':
-          Appointment.belongsTo(models);
-          break;
-        case 'hasOne':
-          Appointment.hasOne(models);
-          break;
-      }
+    static associate(models) {
+      Appointment.belongsTo(models.Patient);
+      Appointment.belongsTo(models.Journey);
     }
   }
   Appointment.init(
-    {
-      startAppointment: DataTypes.DATE,
-      endAppointment: DataTypes.DATE,
-    },
+    {},
     {
       sequelize,
       modelName: 'appointment',
