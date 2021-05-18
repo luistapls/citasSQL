@@ -1,13 +1,13 @@
 const { Op } = require('sequelize');
-const { Journey, Doctor, Clinic, Patient } = require('../database/db');
+const { Journey, Doctor, Clinic } = require('../database/db');
 
-const journeyCoincidence = async (startDate, endDate, doctorId) =>
+const journeyCoincidence = async (startDate, endDate, doctor_id) =>
   await Journey.findAll({
     where: {
-      journeyStart: {
+      journey_start: {
         [Op.between]: [startDate, endDate],
       },
-      doctorId,
+      doctor_id,
     },
   });
 
@@ -16,12 +16,13 @@ const numberJourneys = (startDate, endDate, duration) => {
 };
 
 const createJourney = async (req, res) => {
-  const { doctorId, clinicId, dateStart, dateEnd, journeyDuration } = req.body;
+  const { doctor_id, clinic_id, date_start, date_end, journey_duration } =
+    req.body;
 
-  const startWork = new Date(dateStart);
-  const endWork = new Date(dateEnd);
+  const startWork = new Date(date_start);
+  const endWork = new Date(date_end);
 
-  const coincidence = await journeyCoincidence(startWork, endWork, doctorId);
+  const coincidence = await journeyCoincidence(startWork, endWork, doctor_id);
 
   if (coincidence.length) {
     return res.status(400).json({
@@ -29,7 +30,7 @@ const createJourney = async (req, res) => {
       consultas: coincidence,
     });
   } else {
-    const countJourneys = numberJourneys(startWork, endWork, journeyDuration);
+    const countJourneys = numberJourneys(startWork, endWork, journey_duration);
 
     if (countJourneys < 0) {
       return res.status(400).json({
@@ -45,32 +46,32 @@ const createJourney = async (req, res) => {
         error: 'La duracion de cada consulta es mayor a la jornada de trabajo.',
         startWork,
         endWork,
-        journeyDuration,
+        journey_duration,
       });
     } else {
       const newJourneys = [];
 
-      let journeyStart = startWork;
+      let journey_start = startWork;
 
       for (let i = 0; i < countJourneys; i++) {
-        let journeyEnd = new Date(journeyStart.getTime() + 15 * 60000);
+        let journey_end = new Date(journey_start.getTime() + 15 * 60000);
 
         const newJourney = {
-          doctorId,
-          clinicId,
-          journeyStart,
-          journeyEnd,
+          doctor_id,
+          clinic_id,
+          journey_start,
+          journey_end,
         };
 
         newJourneys.push(newJourney);
 
-        journeyStart = journeyEnd;
+        journey_start = journey_end;
       }
 
       try {
         const createJourney = await Journey.bulkCreate(newJourneys);
 
-        return res.status(201).json({ createJourney });
+        return res.status(201).json(createJourney);
       } catch (error) {
         return res.status(500).json(error);
       }
@@ -87,10 +88,10 @@ const readJourney = async (req, res) => {
 };
 
 const deleteJourney = async (req, res) => {
-  const { journeyId } = req.params;
+  const { journey_id } = req.params;
   await Journey.destroy({
     where: {
-      id: journeyId,
+      id: journey_id,
     },
   });
 

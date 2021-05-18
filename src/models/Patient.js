@@ -8,15 +8,15 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Patient.belongsTo(models.User);
-      Patient.hasMany(models.Appointment);
+      Patient.belongsTo(models.User, { foreignKey: 'user_id' });
+      Patient.hasMany(models.Appointment, { foreignKey: 'patient_id' });
     }
   }
   Patient.init(
     {
-      patientName: DataTypes.STRING,
-      patientAge: DataTypes.INTEGER,
-      patientProblem: DataTypes.TEXT,
+      patient_name: DataTypes.STRING,
+      patient_age: DataTypes.INTEGER,
+      patient_problem: DataTypes.TEXT,
     },
     {
       sequelize,

@@ -8,13 +8,12 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Clinic.belongsTo(models.User);
-      Clinic.hasMany(models.Journey);
+      Clinic.hasMany(models.Journey, { foreignKey: 'clinic_id' });
     }
   }
   Clinic.init(
     {
-      clinicName: DataTypes.STRING,
+      clinic_name: DataTypes.STRING,
     },
     {
       sequelize,

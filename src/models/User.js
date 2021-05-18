@@ -8,17 +8,15 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      User.hasMany(models.UserPermission);
-      User.hasMany(models.UserRole);
-      User.hasOne(models.Token);
-      User.hasOne(models.Patient);
-      User.hasOne(models.Doctor);
-      User.hasOne(models.Clinic);
+      User.hasOne(models.Token, { foreignKey: 'user_id' });
+      User.hasMany(models.UserPermission, { foreignKey: 'user_id' });
+      User.hasOne(models.Patient, { foreignKey: 'user_id' });
+      User.hasOne(models.Doctor, { foreignKey: 'user_id' });
     }
   }
   User.init(
     {
-      userEmail: DataTypes.STRING,
+      user_email: DataTypes.STRING,
     },
     {
       sequelize,

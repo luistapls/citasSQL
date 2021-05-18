@@ -6,28 +6,19 @@ const {
   Journey,
 } = require('../database/db');
 
-const createAppointment = async (req, res) => {
-  const { userId } = req.tokenInfo;
-  const { journeyId } = req.body;
+const createAppointments = async (req, res) => {
+  const { patient_id, journey_id } = req.body;
 
   const existentAppointment = await Appointment.findOne({
     where: {
-      journeyId,
+      journey_id,
     },
   });
 
   if (!existentAppointment) {
-    const findPatient = await Patient.findOne({
-      where: {
-        userId,
-      },
-    });
-
-    const patientId = findPatient.id;
-
     const newAppointment = {
-      patientId,
-      journeyId,
+      patient_id,
+      journey_id,
     };
 
     const createdAppointment = await Appointment.create(newAppointment);
@@ -41,10 +32,7 @@ const createAppointment = async (req, res) => {
 };
 
 const readAppointments = async (req, res) => {
-  const { userId } = req.tokenInfo;
-
   const findAppointments = await Appointment.findAll({
-    where: userId,
     include: [
       {
         model: Patient,
@@ -59,16 +47,16 @@ const readAppointments = async (req, res) => {
   return res.status(200).json(findAppointments);
 };
 
-const deleteAppointment = async (req, res) => {
-  const { appointmentId } = req.params;
+const deleteAppointments = async (req, res) => {
+  const { appointments_id } = req.params;
 
   await Appointment.destroy({
     where: {
-      id: appointmentId,
+      id: appointments_id,
     },
   });
 
   return res.status(200).json({});
 };
 
-module.exports = { createAppointment, readAppointments, deleteAppointment };
+module.exports = { createAppointments, readAppointments, deleteAppointments };

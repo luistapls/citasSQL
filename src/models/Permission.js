@@ -8,13 +8,14 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Permission.hasMany(models.UserPermission);
-      Permission.hasMany(models.RolePermission);
+      Permission.hasMany(models.UserPermission, {
+        foreignKey: 'permission_id',
+      });
     }
   }
   Permission.init(
     {
-      permissionType: DataTypes.STRING,
+      permission_type: DataTypes.STRING,
     },
     {
       sequelize,
