@@ -1,4 +1,4 @@
-const { User, UserPermission, Permission } = require('../database/db');
+const { User, UserPermission, Permission } = require('../models/index');
 
 module.exports = (requiredPermission) => async (req, res, next) => {
   try {
@@ -8,16 +8,21 @@ module.exports = (requiredPermission) => async (req, res, next) => {
       },
       include: {
         model: UserPermission,
-        include: Permission,
+        as: 'user_permissions',
+        include: {
+          model: Permission,
+          as: 'permission',
+        },
       },
     });
+
     const arrayUserPermissions = userObj.user_permissions;
 
     const userHasPermission = arrayUserPermissions.find(
       (obj) => obj.permission.permission_type === requiredPermission,
     );
-
     if (userHasPermission) {
+      req.userObj = userObj;
       next();
     } else {
       return res.status(401).json({

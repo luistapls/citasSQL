@@ -1,11 +1,11 @@
 module.exports = {
-  username: process.env.DB_USER || 'root',
-  password: process.env.DB_PASS || '',
-  database: process.env.DB_NAME || 'project1',
-  host: process.env.DB_HOST || 'localhost',
-  dialect: process.env.DIALECT || 'mysql',
-  migrationStorage: process.env.MIGRATION_STORAGE || 'sequelize',
-  migrationStorageTableName: process.env.MIGRATION_NAME || 'migrations',
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
+  host: process.env.DB_HOST,
+  dialect: process.env.DB_DIALECT,
+  migrationStorage: process.env.MIGRATION_STORAGE,
+  migrationStorageTableName: process.env.MIGRATION_NAME,
   define: {
     timestamps: false,
   },

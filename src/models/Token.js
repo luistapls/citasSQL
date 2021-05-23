@@ -17,12 +17,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'token',
+      modelName: 'Token',
       timestamps: true,
       paranoid: true,
       deletedAt: 'delete_at',
       createdAt: 'create_at',
       updatedAt: 'update_at',
+      tableName: 'tokens',
     },
   );
   return Token;

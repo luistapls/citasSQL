@@ -3,27 +3,48 @@ const router = express.Router();
 
 const authorization = require('../middleware/authorization.js');
 const authentication = require('../middleware/authentication');
-const appointmentsUtils = require('../utils/appointmentSMethods');
+const appointmentsController = require('../controllers/appointmentsController');
 
 router.post(
   '/create',
   authentication,
   authorization('APPOINTMENTS_CREATE'),
-  appointmentsUtils.createAppointments,
+  appointmentsController.createAppointments,
 );
 
 router.get(
   '/read',
   authentication,
   authorization('APPOINTMENTS_READ'),
-  appointmentsUtils.readAppointments,
+  appointmentsController.readAppointments,
+);
+
+router.put(
+  '/update/:appointments_id',
+  authentication,
+  authorization('APPOINTMENTS_UPDATE'),
+  appointmentsController.updateAppointments,
 );
 
 router.delete(
-  '/delete/:appointmentsId',
+  '/delete/:appointments_id',
   authentication,
   authorization('APPOINTMENTS_DELETE'),
-  appointmentsUtils.deleteAppointments,
+  appointmentsController.deleteAppointments,
 );
 
+router.put(
+  '/request/create',
+  authentication,
+  authorization('APPOINTMENTS_REQUEST'),
+  appointmentsController.createRequest,
+);
+
+router.put(
+  '/request/delete/:appointments_id',
+  authentication,
+  authorization('APPOINTMENTS_REQUEST'),
+  appointmentsController.delete
+  Request,
+);
 module.exports = router;

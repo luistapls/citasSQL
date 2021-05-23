@@ -1,4 +1,4 @@
-const { Token } = require('../database/db');
+const { Token } = require('../models/index');
 
 module.exports = async (req, res, next) => {
   try {

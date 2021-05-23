@@ -9,18 +9,29 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       User.hasOne(models.Token, { foreignKey: 'user_id' });
-      User.hasMany(models.UserPermission, { foreignKey: 'user_id' });
-      User.hasOne(models.Patient, { foreignKey: 'user_id' });
-      User.hasOne(models.Doctor, { foreignKey: 'user_id' });
+      User.hasMany(models.UserPermission, {
+        as: 'user_permissions',
+        foreignKey: 'user_id',
+      });
+      User.hasOne(models.Appointment, {
+        foreignKey: 'doctor_id',
+      });
+      User.hasOne(models.Appointment, {
+        foreignKey: 'patient_id',
+      });
     }
   }
   User.init(
     {
       user_email: DataTypes.STRING,
+      user_name: DataTypes.STRING,
+      user_age: DataTypes.INTEGER,
+      user_type: DataTypes.STRING,
     },
     {
       sequelize,
-      modelName: 'user',
+      modelName: 'User',
+      tableName: 'users',
     },
   );
   return User;
