@@ -1,9 +1,5 @@
 require('dotenv').config();
-// Prueba
-// SEgunda prueba
-// MAs cambios en esta verga
-// OJALA FUNCIONE ESTA VERGA
-// Purbea 5
+
 const express = require('express');
 const app = express();
 
