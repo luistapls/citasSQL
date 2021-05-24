@@ -36,15 +36,15 @@ router.delete(
 router.put(
   '/request/create',
   authentication,
-  authorization('APPOINTMENTS_REQUEST'),
+  authorization('REQUEST_CREATE'),
   appointmentsController.createRequest,
 );
 
 router.put(
   '/request/delete/:appointments_id',
   authentication,
-  authorization('APPOINTMENTS_REQUEST'),
-  appointmentsController.delete
-  Request,
+  authorization('REQUEST_DELETE'),
+  appointmentsController.deleteRequest
 );
+
 module.exports = router;
